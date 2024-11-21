@@ -1,48 +1,61 @@
 const taskInput = document.getElementById("task-input");
 const addButton = document.getElementById("add-button");
 const taskList = document.getElementById("task-list");
+const toggleDarkMode = document.getElementById("toggle-dark-mode");
 
-// Función para agregar una tarea
 function addTask(taskText) {
-  const taskId = Date.now(); // Generar un identificador único basado en la marca de tiempo actual
-  const li = document.createElement("li");
-  li.dataset.taskId = taskId; // Asignar el identificador único como un atributo de datos
+	const taskId = Date.now();
+	const li = document.createElement("li");
+	li.dataset.taskId = taskId;
+	li.classList.add("list-group-item");
 
-  // Contenido de la tarea
-  const span = document.createElement("span");
-  span.textContent = taskText;
+	const span = document.createElement("span");
+	span.className = "task-text";
+	span.textContent = taskText;
 
-  // Botón para eliminar tarea
-  const deleteButton = document.createElement("button");
-  deleteButton.textContent = "Eliminar";
-  deleteButton.addEventListener("click", () => {
-    li.remove();
-  });
+	const completeButton = document.createElement("button");
+	completeButton.className = "btn btn-success btn-sm";
+	completeButton.innerHTML = '<i class="fas fa-check"></i>';
+	completeButton.addEventListener("click", () => {
+		span.classList.toggle("task-completed");
+	});
 
-  // Botón para editar tarea
-  const editButton = document.createElement("button");
-  editButton.textContent = "Editar";
-  editButton.addEventListener("click", () => {
-    const newTaskText = prompt("Editar tarea:", span.textContent);
-    if (newTaskText !== null) {
-      span.textContent = newTaskText;
-    }
-  });
+	const editButton = document.createElement("button");
+	editButton.className = "btn btn-warning btn-sm";
+	editButton.innerHTML = '<i class="fas fa-edit"></i>';
+	editButton.addEventListener("click", () => {
+		const newTaskText = prompt("Editar tarea:", span.textContent);
+		if (newTaskText !== null) {
+			span.textContent = newTaskText;
+		}
+	});
 
-  // Agregar contenido y botones a la tarea
-  li.appendChild(span);
-  li.appendChild(deleteButton);
-  li.appendChild(editButton);
+	const deleteButton = document.createElement("button");
+	deleteButton.className = "btn btn-danger btn-sm";
+	deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
+	deleteButton.addEventListener("click", () => {
+		li.remove();
+	});
 
-  // Agregar tarea a la lista
-  taskList.appendChild(li);
+	li.appendChild(span);
+	li.appendChild(completeButton);
+	li.appendChild(editButton);
+	li.appendChild(deleteButton);
+
+	taskList.appendChild(li);
 }
 
-// Evento para agregar una tarea
 addButton.addEventListener("click", () => {
-  const taskText = taskInput.value.trim();
-  if (taskText !== "") {
-    addTask(taskText);
-    taskInput.value = "";
-  }
+	const taskText = taskInput.value.trim();
+	if (taskText !== "") {
+		addTask(taskText);
+		taskInput.value = "";
+	}
+});
+
+toggleDarkMode.addEventListener("change", () => {
+	document.body.classList.toggle("dark-mode");
+	document.querySelector(".container").classList.toggle("dark-mode");
+	const listItems = document.querySelectorAll(".list-group-item");
+	listItems.forEach((item) => item.classList.toggle("dark-mode"));
 });
